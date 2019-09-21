@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>P--Y</title>
+    <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-database.js"></script>
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyDgYmW0tVWMfv-IVURyvQNqlNPynsG0sTQ",
+        authDomain: "p-y-89803.firebaseapp.com",
+        databaseURL: "https://p-y-89803.firebaseio.com",
+        projectId: "p-y-89803",
+        storageBucket: "",
+        messagingSenderId: "551920152722",
+        appId: "1:551920152722:web:9f21c5206ca8187f"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    <script type="text/javascript"></script>
+
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Open+Sans);
+      .btn { display: inline-block; *display: inline; *zoom: 1; padding: 4px 10px 4px; margin-bottom: 0; font-size: 13px; line-height: 18px; color: #333333; text-align: center;text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); vertical-align: middle; background-color: #f5f5f5; background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6); background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6); background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6)); background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6); background-image: -o-linear-gradient(top, #ffffff, #e6e6e6); background-image: linear-gradient(top, #ffffff, #e6e6e6); background-repeat: repeat-x; filter: progid:dximagetransform.microsoft.gradient(startColorstr=#ffffff, endColorstr=#e6e6e6, GradientType=0); border-color: #e6e6e6 #e6e6e6 #e6e6e6; border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25); border: 1px solid #e6e6e6; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); cursor: pointer; *margin-left: .3em; }
+      .btn:hover, .btn:active, .btn.active, .btn.disabled, .btn[disabled] { background-color: #e6e6e6; }
+      .btn-large { padding: 9px 14px; font-size: 15px; line-height: normal; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+      .btn:hover { color: #333333; text-decoration: none; background-color: #e6e6e6; background-position: 0 -15px; -webkit-transition: background-position 0.1s linear; -moz-transition: background-position 0.1s linear; -ms-transition: background-position 0.1s linear; -o-transition: background-position 0.1s linear; transition: background-position 0.1s linear; }
+      .btn-primary, .btn-primary:hover { text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); color: #ffffff; }
+      .btn-primary.active { color: rgba(255, 255, 255, 0.75); }
+      .btn-primary { background-color: #4a77d4; background-image: -moz-linear-gradient(top, #6eb6de, #4a77d4); background-image: -ms-linear-gradient(top, #6eb6de, #4a77d4); background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6eb6de), to(#4a77d4)); background-image: -webkit-linear-gradient(top, #6eb6de, #4a77d4); background-image: -o-linear-gradient(top, #6eb6de, #4a77d4); background-image: linear-gradient(top, #6eb6de, #4a77d4); background-repeat: repeat-x; filter: progid:dximagetransform.microsoft.gradient(startColorstr=#6eb6de, endColorstr=#4a77d4, GradientType=0);  border: 1px solid #3762bc; text-shadow: 1px 1px 1px rgba(0,0,0,0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.5); }
+      .btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] { filter: none; background-color: #4a77d4; }
+      .btn-block { width: 100%; display:block; }
+
+      * { -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; -o-box-sizing:border-box; box-sizing:border-box; }
+
+      html { width: 100%; height:100%; overflow:hidden; }
+
+      body {
+        width: 100%;
+        height:100%;
+        font-family: 'Open Sans', sans-serif;
+        background: #092756;
+        background: -moz-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%),-moz-linear-gradient(top,  rgba(57,173,219,.25) 0%, rgba(42,60,87,.4) 100%), -moz-linear-gradient(-45deg,  #670d10 0%, #092756 100%);
+        background: -webkit-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), -webkit-linear-gradient(top,  rgba(57,173,219,.25) 0%,rgba(42,60,87,.4) 100%), -webkit-linear-gradient(-45deg,  #670d10 0%,#092756 100%);
+        background: -o-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), -o-linear-gradient(top,  rgba(57,173,219,.25) 0%,rgba(42,60,87,.4) 100%), -o-linear-gradient(-45deg,  #670d10 0%,#092756 100%);
+        background: -ms-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), -ms-linear-gradient(top,  rgba(57,173,219,.25) 0%,rgba(42,60,87,.4) 100%), -ms-linear-gradient(-45deg,  #670d10 0%,#092756 100%);
+        background: -webkit-radial-gradient(0% 100%, ellipse cover, rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), linear-gradient(to bottom,  rgba(57,173,219,.25) 0%,rgba(42,60,87,.4) 100%), linear-gradient(135deg,  #670d10 0%,#092756 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3E1D6D', endColorstr='#092756',GradientType=1 );
+      }
+      a:link {
+         color: #666;
+         font-weight: bold;
+         text-decoration:none;
+      }
+      a:visited {
+         color: #666;
+         font-weight:bold;
+         text-decoration:none;
+      }
+      a:active,
+      a:hover {
+         color: #bd5a35;
+         text-decoration:underline;
+      }
+      table a:link {
+         color: #666;
+         font-weight: bold;
+         text-decoration:none;
+      }
+      table a:visited {
+         color: #999999;
+         font-weight:bold;
+         text-decoration:none;
+      }
+      table a:active,
+      table a:hover {
+         color: #bd5a35;
+         text-decoration:underline;
+      }
+      table {
+         font-family:Arial, Helvetica, sans-serif;
+         color:#666;
+         font-size:12px;
+         text-shadow: 1px 1px 0px #fff;
+         background:#eaebec;
+         margin:20px;
+         border:#ccc 1px solid;
+
+         -moz-border-radius:3px;
+         -webkit-border-radius:3px;
+         border-radius:3px;
+
+         -moz-box-shadow: 0 1px 2px #d1d1d1;
+         -webkit-box-shadow: 0 1px 2px #d1d1d1;
+         box-shadow: 0 1px 2px #d1d1d1;
+      }
+      table th {
+         padding:15px;
+         border-top:1px solid #fafafa;
+         border-bottom:1px solid #e0e0e0;
+
+         background: #ededed;
+         background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ebebeb));
+         background: -moz-linear-gradient(top,  #ededed,  #ebebeb);
+      }
+      table th:first-child{
+         text-align: left;
+         padding-left:20px;
+      }
+      table tr:first-child th:first-child{
+         -moz-border-radius-topleft:3px;
+         -webkit-border-top-left-radius:3px;
+         border-top-left-radius:3px;
+      }
+      table tr:first-child th:last-child{
+         -moz-border-radius-topright:3px;
+         -webkit-border-top-right-radius:3px;
+         border-top-right-radius:3px;
+      }
+      table tr{
+         text-align: center;
+         padding-left:20px;
+      }
+      table tr td:first-child{
+         text-align: left;
+         padding-left:20px;
+         border-left: 0;
+      }
+      table tr td {
+         padding:12px;
+         border-top: 1px solid #ffffff;
+         border-bottom:1px solid #e0e0e0;
+         border-left: 1px solid #e0e0e0;
+
+         background: #fafafa;
+         background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+         background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
+      }
+      table tr.even td{
+         background: #f6f6f6;
+         background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+         background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
+      }
+      table tr:last-child td{
+         border-bottom:0;
+      }
+      table tr:last-child td:first-child{
+         -moz-border-radius-bottomleft:3px;
+         -webkit-border-bottom-left-radius:3px;
+         border-bottom-left-radius:3px;
+      }
+      table tr:last-child td:last-child{
+         -moz-border-radius-bottomright:3px;
+         -webkit-border-bottom-right-radius:3px;
+         border-bottom-right-radius:3px;
+      }
+      table tr:hover td{
+         background: #f2f2f2;
+         background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+         background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);
+      }
+
+    </style>
+  </head>
+  <body>
+    <script>
+      //좌석 수만큼 테이블 만들어줌.
+      for(var i=1; i<=4; i++) {
+         var id_seat = "number_seat_" + i;
+         var id_name = "user_name_" + i;
+         var id_st = "start_time_" + i;
+         var id_ut = "used_time_" + i;
+         var id_cp = "current_point_" + i;
+         var id_up = "used_point_" + i;
+         document.write(
+          `<div>
+            <table cellspacing=\'0\'>
+               <tr>
+                 <th>Title</th>
+                 <th>Contents</th>
+               </tr>
+               <tr class=\'even\'>
+                 <td>자리</td>
+                 <td id=${id_seat}></td>
+               </tr>
+               <tr>
+                 <td>name</td>
+                 <td id=${id_name}></td>
+               </tr>
+               <tr>
+                 <td>시작시간</td>
+                 <td id=${id_st}></td>
+               </tr>
+               <tr class=\'even\'>
+                 <td>사용한시간</td>
+                 <td id=${id_ut}></td>
+               </tr>
+               <tr>
+                 <td>현재포인트</td>
+                 <td id=${id_cp}></td>
+               </tr>
+               <tr class=\'even\'>
+                 <td>사용포인트</td>
+                 <td id=${id_up}></td>
+               </tr>
+             </table>
+           </div>` );
+           document.getElementById("number_seat_"+i).innerText = i;
+           document.getElementById("user_name_"+i).innerText = 'NULL';
+           document.getElementById("start_time_"+i).innerText = 'NULL';
+           document.getElementById("used_time_"+i).innerText = 'NULL';
+           document.getElementById("current_point_"+i).innerText = 'NULL';
+           document.getElementById("used_point_"+i).innerText = 'NULL';
+      }
+
+      // Database 선언
+      database = firebase.database();
+
+      // divide string => comp, loc
+      var url = location.href.split("?");
+      var data = url[1].split("&");
+
+      var comp_name = data[0]; // 지점 이름
+      var loc_name = decodeURI(data[1]); // 지역 이름
+      var concat = comp_name+loc_name;  //지점 + 지역 이름 합친거
+      //선택한 pc방 값 그대로 불러옴.
+      var pcCafeRef = database.ref("PCcafe/"+comp_name+"/"+loc_name);
+      var pcCafeRef_temp = database.ref("PCcafe/"+comp_name+"/"+loc_name);
+      var ownerRef = database.ref("owner/"+concat);
+      var userRef;
+
+      //main함수, pc대수 찾아서 인자로 넘겨줌
+      ownerRef.on("value", function(snap){
+        var unit_point = snap.child("unit_point").val();
+        pcCafeRef_temp.on("value", function(data){
+          var length = data.numChildren();
+          Management(length);
+        });
+      });
+
+      //uid로 db접근하는거
+      function Management(length){
+        for(var i=1; i<=length; i++){
+          pcCafeRef.on("value", function(snapshot){
+            var uid = snapshot.child(i).child("uid").val();
+            var using_flag = snapshot.child(i).child("using").val();
+            if(using_flag == "O"){
+              WriteTable(i, uid);
+            }
+          });
+        }
+      }
+
+      //Table에 데이터 입력하는 함수.
+      function WriteTable(i, uid){
+        userRef = database.ref("member/"+uid);
+        userRef.on("value", function(user_data){
+          var user_name = user_data.child("name").val();
+          var cur_point = user_data.child("point").val();
+          document.getElementById("user_name_"+i).innerText = user_name;
+          //여기에 시작시간 추가
+          //여기에 사용한 시간 추가
+          document.getElementById("current_point_"+i).innerText = cur_point;
+          //여기에 사용한 포인트 추가.
+        });
+      }
+    </script>
+  </body>
+</html>
