@@ -175,6 +175,7 @@
          var id_ut = "used_time_" + i;
          var id_cp = "current_point_" + i;
          var id_up = "used_point_" + i;
+         var id_quit = "quit_" + i;
          document.write(
           `<div>
             <table cellspacing=\'0\'>
@@ -206,6 +207,15 @@
                  <td>사용포인트</td>
                  <td id=${id_up}></td>
                </tr>
+               <tr>
+                  <td></td>
+                  <td>
+                    <input type= "button"
+                           id=${id_quit}
+                           value="사용종료"
+                           onclick="Quit(id)"/>
+                  </td>
+               </tr>
              </table>
            </div>` );
            document.getElementById("number_seat_"+i).innerText = i;
@@ -230,6 +240,8 @@
       var pcCafeRef = database.ref("PCcafe/"+comp_name+"/"+loc_name);
       var pcCafeRef_temp = database.ref("PCcafe/"+comp_name+"/"+loc_name);
       var ownerRef = database.ref("owner/"+concat);
+      var quitPcRef;
+      var quitUserRef;
       var userRef;
 
       //main함수, pc대수 찾아서 인자로 넘겨줌
@@ -250,8 +262,21 @@
             if(using_flag == "O"){
               WriteTable(i, uid);
             }
+            else if(using_flag == "X"){
+              InitializeTable(i);
+            }
           });
         }
+      }
+
+      //사용종료하고 다 NULL 써줄놈
+      function InitializeTable(i){
+        document.getElementById("number_seat_"+i).innerText = i;
+        document.getElementById("user_name_"+i).innerText = 'NULL';
+        document.getElementById("start_time_"+i).innerText = 'NULL';
+        document.getElementById("used_time_"+i).innerText = 'NULL';
+        document.getElementById("current_point_"+i).innerText = 'NULL';
+        document.getElementById("used_point_"+i).innerText = 'NULL';
       }
 
       //Table에 데이터 입력하는 함수.
@@ -266,6 +291,34 @@
           document.getElementById("current_point_"+i).innerText = cur_point;
           //여기에 사용한 포인트 추가.
         });
+      }
+
+      //사용종료 버튼 누르면 실행되는 함수.
+      function Quit(e){
+        var button_id = e.split("_");
+        var i = button_id[1];    //누른 버튼 뒤에 있는 1값 가져온거임
+        pcCafeRef.once("value", function(snapshot){
+          var uid = snapshot.child(i).child("uid").val();
+          var using_flag = snapshot.child(i).child("using").val();
+          console.log("a");
+          UpdateDB(i, uid);
+        });
+      }
+
+      //사용종료 버튼 누르면 DB 업데이트 되는 함수.
+      function UpdateDB(i, uid){
+        console.log("b");
+        quitPcRef = database.ref("PCcafe/"+comp_name+"/"+loc_name+"/"+i);
+        quitUserRef = database.ref("member/"+uid);
+        quitPcRef.update({
+          time_start: "",
+          uid: "",
+          using: "X"
+        });
+        quitUserRef.update({
+          seat_using: ""
+        });
+
       }
     </script>
   </body>
