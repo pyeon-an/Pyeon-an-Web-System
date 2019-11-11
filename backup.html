@@ -172,10 +172,10 @@
       var id_seat = "number_seat_" + i;
       var id_name = "user_name_" + i;
       var id_st = "start_time_" + i;
-      //var id_ut = "used_time_" + i;
+      var id_ut = "used_time_" + i;
       var id_cp = "current_point_" + i;
-      //var id_up = "used_point_" + i;
-     // var id_quit = "quit_" + i;
+      var id_up = "used_point_" + i;
+      var id_quit = "quit_" + i;
       document.write(
         `<div>
         <table cellspacing=\'0\'>
@@ -194,18 +194,20 @@
           <tr>
           <td>시작시간</td>
           <td id=${id_st}></td>
+          </tr>
+          <tr class=\'even\'>
+          <td>사용한시간</td>
+          <td id=${id_ut}></td>
+          </tr>
           <tr>
           <td>현재포인트</td>
           <td id=${id_cp}></td>
-        </table>
-        </div>` );
-        document.getElementById("number_seat_"+i).innerText = i;
-        document.getElementById("user_name_"+i).innerText = 'NULL';
-        document.getElementById("start_time_"+i).innerText = 'NULL';
-        document.getElementById("current_point_"+i).innerText = 'NULL';
-      }
-      /*
-      /*<tr>
+          </tr>
+          <tr class=\'even\'>
+          <td>사용포인트</td>
+          <td id=${id_up}></td>
+          </tr>
+          <tr>
             <td></td>
             <td>
             <input type= "button"
@@ -214,19 +216,17 @@
                 onclick="Quit(id)"/>
             </td>
           </tr>
-          </tr>
-          <tr class=\'even\'>
-          <td>사용한시간</td>
-          <td id=${id_ut}></td>
-          </tr>
-          */
-	  /*</tr>
-          <tr class=\'even\'>
-          <td>사용포인트</td>
-          <td id=${id_up}></td>
-          </tr>*/
-
-
+        </table>
+        </div>` );
+        document.getElementById("number_seat_"+i).innerText = i;
+        document.getElementById("user_name_"+i).innerText = 'NULL';
+        document.getElementById("start_time_"+i).innerText = 'NULL';
+        document.getElementById("used_time_"+i).innerText = 'NULL';
+        document.getElementById("current_point_"+i).innerText = 'NULL';
+        document.getElementById("used_point_"+i).innerText = 'NULL';
+      }
+      
+	  
       // Database 선언
       database = firebase.database();
 
@@ -236,25 +236,29 @@
 
       var comp_name = data[0]; // 지점 이름
       var loc_name = decodeURI(data[1]); // 지역 이름
-      //var concat = comp_name+loc_name;  //지점 + 지역 이름 합친거
+      var concat = comp_name+loc_name;  //지점 + 지역 이름 합친거
       //선택한 pc방 값 그대로 불러옴.
 
       //pc Cafe 총괄 Reference
       var pcCafeRef = database.ref("PCcafe/"+comp_name+"/"+loc_name);
 
       //pc Cafe Com 대수 세어주는 단발성 Reference
-      var Initializer = database.ref("PCcafe/"+comp_name+"/"+loc_name);
+      var pcCafeRef_temp = database.ref("PCcafe/"+comp_name+"/"+loc_name);
+      var pcCafeRef_temp2 = database.ref("PCcafe/"+comp_name+"/"+loc_name);
+      var pcCafeRef_temp3 = database.ref("PCcafe/"+comp_name+"/"+loc_name);
+      var ownerRef = database.ref("owner/"+concat); //Main Reference
+
+      var quitPcRef;    //PC quit Reference
+      var pointPcRef;
+      var quitUserRef;  //quit target user Reference
+      var pointUserRef;
       var userRef;  //user DB Reference
 
-      //main함수, pc대수 찾아서 인자로 넘겨줌, Initializer #1
-      Run();
-      function Run(){
-        Initializer.on("value", function(data){
-          var length = data.numChildren();
-          Management(length);
-        });
-        setTimeout("Run()", 4000);  //Repaint
-      }
+      //main함수, pc대수 찾아서 인자로 넘겨줌, Initializer
+      pcCafeRef_temp.on("value", function(data){
+        var length = data.numChildren();
+        Management(length);
+      });
       //uid로 db접근하는거, PC값 Table에 입력하는거. 초기 세팅
       function Management(length){
         for(var i=1; i<=length; i++){
@@ -266,11 +270,13 @@
               var start_time_db = snapshot.child(i).child("time_start").val();
               var parsing_time = new Date(start_time_db); //GMT -> KST
               var start_time_KST = parsing_time.toLocaleString(); //GMT -> KST
-              //var used_time = snapshot.child(i).child("time_used").val();
-              var used_point = snapshot.child(i).child("point_used").val(); //변하지 않는 값.
+              var used_time = snapshot.child(i).child("time_used").val();
+              var used_point = snapshot.child(i).child("point_used").val();
               document.getElementById("start_time_"+i).innerText = start_time_KST;
-              //document.getElementById("used_time_"+i).innerText = used_time;
-              //document.getElementById("used_point_"+i).innerText = used_point;
+              document.getElementById("used_time_"+i).innerText = used_time;
+              document.getElementById("used_point_"+i).innerText = used_point;
+              console.log("i : ", i);
+              console.log("uid : ", uid);
               WriteTable(i, uid);
             }
             else if(using_flag == "X"){
@@ -279,29 +285,19 @@
           });
         }
       }
-      //사용종료하고 다 NULL 써줄놈
-      function InitializeTable(i){
-        document.getElementById("number_seat_"+i).innerText = i;
-        document.getElementById("user_name_"+i).innerText = 'NULL';
-        document.getElementById("start_time_"+i).innerText = 'NULL';
-        //document.getElementById("used_time_"+i).innerText = 'NULL';
-        document.getElementById("current_point_"+i).innerText = 'NULL';
-        //document.getElementById("used_point_"+i).innerText = 'NULL';
-      }
-
       //Table에 User데이터 입력하는 함수.
       function WriteTable(i, uid){
         userRef = database.ref("member/"+uid);
-        userRef.once("value", function(user_data) {
-          var cur_point = user_data.child("point").val();
+        userRef.once("value", function(user_data){
           var user_name = user_data.child("name").val();
+          var cur_point = user_data.child("point").val();
           document.getElementById("user_name_"+i).innerText = user_name;
           document.getElementById("current_point_"+i).innerText = cur_point;
         });
       }
 
       //사용종료 버튼 누르면 실행되는 함수.
-      /*function Quit(e){
+      function Quit(e){
         var button_id = e.split("_");
         var i = button_id[1];    //누른 버튼 뒤에 있는 1값 가져온거임
         pcCafeRef_temp3.once("value", function(snapshot){
@@ -309,19 +305,29 @@
           var using_flag = snapshot.child(i).child("using").val();
           UpdateDB(i, uid);
         });
-      }*/
+      }
 
-      //돈 다쓰면 강제종료 되는 함수 // 이거 보류
-      /*function Quit_no_more_point(i){
+      //돈 다쓰면 강제종료 되는 함수
+      function Quit_no_more_point(i){
         pcCafeRef_temp3.once("value", function(snapshot){
           var uid = snapshot.child(i).child("uid").val();
           var using_flag = snapshot.child(i).child("using").val();
           console.log(uid);
           UpdateDB(i, uid);
         });
-      }*/
+      }
+
+      //사용종료하고 다 NULL 써줄놈
+      function InitializeTable(i){
+        document.getElementById("number_seat_"+i).innerText = i;
+        document.getElementById("user_name_"+i).innerText = 'NULL';
+        document.getElementById("start_time_"+i).innerText = 'NULL';
+        document.getElementById("used_time_"+i).innerText = 'NULL';
+        document.getElementById("current_point_"+i).innerText = 'NULL';
+        document.getElementById("used_point_"+i).innerText = 'NULL';
+      }
       //사용종료 버튼 누르면 DB 업데이트 되는 함수.
-      /*function UpdateDB(i, uid){
+      function UpdateDB(i, uid){
         if(uid != ""){
           quitPcRef = database.ref("PCcafe/"+comp_name+"/"+loc_name+"/"+i);
           quitUserRef = database.ref("member/"+uid);
@@ -338,7 +344,45 @@
           });
           InitializeTable(i);
         }
-      }*/
+      }
+      /*
+      //Point 차감 Main 함수임. 자가반복 하는 함수. 중간에 주석 풀어줘야함.
+      !function Counter(){
+        setTimeout(function(){
+          ownerRef.once("value", function(snap){  //사장님 DB목록 들어가서 해당 cafe의 가격 조회.
+            var unit_point = snap.child("unit_point").val();  //가격
+            pcCafeRef_temp2.once("value", function(snapshot){ //그저 pc대수 읽어오는 변수
+              var length = snapshot.numChildren();  //pc대수
+              for(var i=1; i<=length; i++){ //pc대수만큼 반복
+                var uid = snapshot.child(i).child("uid").val(); //uid읽어옴.
+                var using_flag = snapshot.child(i).child("using").val();  //사용중 여부판별
+                if(using_flag == "O"){  //사용중이면
+                  var cur_point = document.getElementById("current_point_"+i).innerText;  //현재 point Table에서 조회
+                  var used_point = document.getElementById("used_point_"+i).innerText;  //사용한 포인트 Table에서 조회
+                  pointPcRef = database.ref("PCcafe/"+comp_name+"/"+loc_name+"/"+i);  //사용중인 컴터 체크
+                  pointUserRef = database.ref("member/"+uid); //사용중인 User
+                  if(cur_point < unit_point){
+                    Quit_no_more_point(i);
+                  }
+                  else{
+                    var dec_point = cur_point - unit_point; //뺄 포인트
+                    used_point = parseInt(used_point);
+                    var update_used_point = used_point + unit_point;
+                    //DB UPDATE
+                    pointPcRef.update({
+                      point_used: update_used_point
+                    })
+                    pointUserRef.update({
+                      point: dec_point
+                    })
+                  }
+                }
+              }
+            });
+          });
+          Counter();  //이거 주석 풀어야 정상 작동함.
+        },1000);
+      }()*/
 
 
     </script>
