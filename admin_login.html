@@ -6,6 +6,10 @@
     <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.3.5/firebase-database.js"></script>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="dropcss/style.css">
+
     <script>
       // Your web app's Firebase configuration
       var firebaseConfig = {
@@ -20,6 +24,8 @@
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
     </script>
+
+
 
     <style>
       @import url(http://fonts.googleapis.com/css?family=Open+Sans);
@@ -84,15 +90,30 @@
 
   </head>
   <body>
-    <select id="comp" name="company" onchange="categoryChange_comp(this)">
-      <option>지점을 선택해주세요</option>
+  <!--  <select id="comp" name="company" onchange="categoryChange_comp(this)">
+      <option value="Default">지점을 선택해주세요</option>
       <option value="NTop">NTop</option>
       <option value="3POP">3POP</option>
     </select>
     <select id="location" onchange="categoryChange_loc(this)">
       <option>지역을 선택해주세요</option>
-    </select>
-    <br/><br/>
+    </select> -->
+    <section class="container">
+      <div class="dropdown dropdown-dark">
+        <select id="comp" name="company" class="dropdown-select" onchange="categoryChange_comp(this)">
+            <option value="Default">지점을 선택해주세요</option>
+            <option value="NTop">NTop</option>
+            <option value="3POP">3POP</option>
+          </select>
+      </div>
+
+      <div class="dropdown dropdown-dark">
+        <select id="location" class="dropdown-select" onchange="categoryChange_loc(this)">
+          <option>지역을 선택해주세요</option>
+        </select>
+      </div>
+    </section>
+    <br/>
 
     <div class="login">
       <input type="text"  placeholder="Username" required="required" id="ID">
@@ -111,12 +132,14 @@
         loc.innerText = e.value;
       }
       function categoryChange_comp(e){
-        var loc_NTOP = ["----", "광운대", "인덕대"];
-        var loc_3POP = ["----", "광운대", "숭실대", "인덕대"];
+        var loc_NTOP = ["지역을 선택해주세요", "광운대", "인덕대"];
+        var loc_3POP = ["지역을 선택해주세요", "광운대", "숭실대", "인덕대"];
+        var Default = ["지역을 선택해주세요"];
         var target = document.getElementById("location");
 
         if(e.value == "NTop") var d = loc_NTOP;
         else if(e.value == "3POP") var d = loc_3POP;
+        else var d = Default;
 
         target.options.length = 0;
 

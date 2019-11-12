@@ -86,7 +86,8 @@
          font-size:12px;
          text-shadow: 1px 1px 0px #fff;
          background:#eaebec;
-         margin:20px;
+         margin-left:auto;
+         margin-right:auto;
          border:#ccc 1px solid;
 
          -moz-border-radius:3px;
@@ -172,12 +173,9 @@
       var id_seat = "number_seat_" + i;
       var id_name = "user_name_" + i;
       var id_st = "start_time_" + i;
-      //var id_ut = "used_time_" + i;
       var id_cp = "current_point_" + i;
-      //var id_up = "used_point_" + i;
-     // var id_quit = "quit_" + i;
       document.write(
-        `<div>
+        `<div style="float: left; width:25%">
         <table cellspacing=\'0\'>
           <tr>
           <th>Title</th>
@@ -204,28 +202,6 @@
         document.getElementById("start_time_"+i).innerText = 'NULL';
         document.getElementById("current_point_"+i).innerText = 'NULL';
       }
-      /*
-      /*<tr>
-            <td></td>
-            <td>
-            <input type= "button"
-                id=${id_quit}
-                value="사용종료"
-                onclick="Quit(id)"/>
-            </td>
-          </tr>
-          </tr>
-          <tr class=\'even\'>
-          <td>사용한시간</td>
-          <td id=${id_ut}></td>
-          </tr>
-          */
-	  /*</tr>
-          <tr class=\'even\'>
-          <td>사용포인트</td>
-          <td id=${id_up}></td>
-          </tr>*/
-
 
       // Database 선언
       database = firebase.database();
@@ -236,7 +212,6 @@
 
       var comp_name = data[0]; // 지점 이름
       var loc_name = decodeURI(data[1]); // 지역 이름
-      //var concat = comp_name+loc_name;  //지점 + 지역 이름 합친거
       //선택한 pc방 값 그대로 불러옴.
 
       //pc Cafe 총괄 Reference
@@ -266,11 +241,8 @@
               var start_time_db = snapshot.child(i).child("time_start").val();
               var parsing_time = new Date(start_time_db); //GMT -> KST
               var start_time_KST = parsing_time.toLocaleString(); //GMT -> KST
-              //var used_time = snapshot.child(i).child("time_used").val();
               var used_point = snapshot.child(i).child("point_used").val(); //변하지 않는 값.
               document.getElementById("start_time_"+i).innerText = start_time_KST;
-              //document.getElementById("used_time_"+i).innerText = used_time;
-              //document.getElementById("used_point_"+i).innerText = used_point;
               WriteTable(i, uid);
             }
             else if(using_flag == "X"){
@@ -299,48 +271,6 @@
           document.getElementById("current_point_"+i).innerText = cur_point;
         });
       }
-
-      //사용종료 버튼 누르면 실행되는 함수.
-      /*function Quit(e){
-        var button_id = e.split("_");
-        var i = button_id[1];    //누른 버튼 뒤에 있는 1값 가져온거임
-        pcCafeRef_temp3.once("value", function(snapshot){
-          var uid = snapshot.child(i).child("uid").val();
-          var using_flag = snapshot.child(i).child("using").val();
-          UpdateDB(i, uid);
-        });
-      }*/
-
-      //돈 다쓰면 강제종료 되는 함수 // 이거 보류
-      /*function Quit_no_more_point(i){
-        pcCafeRef_temp3.once("value", function(snapshot){
-          var uid = snapshot.child(i).child("uid").val();
-          var using_flag = snapshot.child(i).child("using").val();
-          console.log(uid);
-          UpdateDB(i, uid);
-        });
-      }*/
-      //사용종료 버튼 누르면 DB 업데이트 되는 함수.
-      /*function UpdateDB(i, uid){
-        if(uid != ""){
-          quitPcRef = database.ref("PCcafe/"+comp_name+"/"+loc_name+"/"+i);
-          quitUserRef = database.ref("member/"+uid);
-          console.log(quitUserRef.key);
-          console.log(quitPcRef.key);
-          quitUserRef.update({
-            seat_using: ""
-          });
-          quitPcRef.update({
-            point_used: 0,
-            time_start: "",
-            uid: "",
-            using: "X",
-          });
-          InitializeTable(i);
-        }
-      }*/
-
-
     </script>
   </body>
 </html>
